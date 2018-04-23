@@ -32,6 +32,8 @@ namespace SammysAuto.Controllers
 
 
         //POST: ServiceTypes/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ServiceType serviceType)
         {
             if (ModelState.IsValid)
