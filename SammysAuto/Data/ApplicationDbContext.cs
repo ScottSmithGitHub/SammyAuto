@@ -18,6 +18,8 @@ namespace SammysAuto.Data
         public DbSet<ServiceType> ServiceTypes { get; set; }
         public DbSet<Car> Cars { get; set; }
 
+        public DbSet<Service> Services { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
