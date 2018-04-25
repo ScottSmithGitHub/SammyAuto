@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SammysAuto.Data;
 using SammysAuto.Models;
+using SammysAuto.Utility;
 
 namespace SammysAuto.Controllers
 {
+    [Authorize(Roles = SD.AdminEndUser)]
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -144,7 +147,20 @@ namespace SammysAuto.Controllers
                 return NotFound();
             }
 
+            var cars = _db.Cars.Where(x => x.UserId == userInDb.Id);
+            List<Car> listOfCars = cars.ToList();
+
+            foreach (var car in listOfCars)
+            {
+                var services = _db.Services.Where(x => x.CarId == car.Id);
+
+                _db.Services.RemoveRange(services);
+            }
+
+            _db.Cars.RemoveRange(cars);
+
             _db.Users.Remove(userInDb);
+
             await _db.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
